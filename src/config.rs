@@ -12,10 +12,22 @@ pub struct Config {
 impl Config {
     pub fn build(args: &[String]) -> Result<Config, Box<dyn std::error::Error>> {
         if args.len() >= 2 {
-            dotenv::from_path(&args[1])?;
+            tracing::info!("Trying to load .env file from path: {}", &args[1]);
+
+            match dotenv::from_path(&args[1]) {
+                Ok(_) => tracing::info!("Loaded .env file from path: {}", &args[1]),
+                Err(err) => Err(err)?,
+            }
         } else {
-            if dotenv::dotenv().is_err() {
-                tracing::debug!("No .env file found. using environment variables from shell");
+            tracing::info!("Trying to find .env file from current and parent directories.");
+
+            match dotenv::dotenv() {
+                Ok(path) => tracing::info!("Loaded .env file from path: {}", path.display()),
+                Err(_) => {
+                    tracing::info!(
+                        "No .env file found. using environment variables from shell only."
+                    )
+                }
             }
         };
 
