@@ -53,7 +53,11 @@ impl Config {
         };
 
         if config.log_requests {
-            tracing::info!("Enabled request logging")
+            tracing::info!("Enabled request logging.")
+        }
+
+        if config.cors_development {
+            tracing::info!("Enabled \"very_permissive\" cors settings.")
         }
 
         Ok(config)
