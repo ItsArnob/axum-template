@@ -6,7 +6,7 @@ pub struct Config {
     pub db_name: String,
     pub socket_address: SocketAddr,
     pub log_requests: bool,
-    pub cors_development: bool
+    pub cors_development: bool,
 }
 
 impl Config {

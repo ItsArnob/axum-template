@@ -1,8 +1,4 @@
-use axum::{
-    extract::State,
-    routing::post,
-    Router, response::IntoResponse,
-};
+use axum::{extract::State, response::IntoResponse, routing::post, Router};
 use mongodb::bson::doc;
 
 use crate::{
@@ -12,12 +8,14 @@ use crate::{
 };
 
 pub fn build_router() -> Router<AppState> {
-    Router::new()
-        .route("/", post(index))
+    Router::new().route("/", post(index))
 }
 
 #[axum::debug_handler]
-async fn index(State(state): State<AppState>, JsonExtractor(payload): JsonExtractor<Test>) -> impl IntoResponse {
+async fn index(
+    State(state): State<AppState>,
+    JsonExtractor(payload): JsonExtractor<Test>,
+) -> impl IntoResponse {
     let insert_doc = state
         .db
         .users
@@ -29,18 +27,19 @@ async fn index(State(state): State<AppState>, JsonExtractor(payload): JsonExtrac
             None,
         )
         .await?;
-    match state.db.users.find_one(doc! { "_id": &insert_doc.inserted_id }, None).await? {
-
+    match state
+        .db
+        .users
+        .find_one(doc! { "_id": &insert_doc.inserted_id }, None)
+        .await?
+    {
         Some(doc) => Ok(axum::Json(doc)),
         None => {
             tracing::error!("This is impossible!");
             Err(Error::Unknown)
         }
-
     }
 }
-
-
 
 // Request body structs
 

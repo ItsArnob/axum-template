@@ -22,7 +22,7 @@ pub enum Error {
     ValidationError(#[from] ValidationErrors),
 
     #[error("Unknown")]
-    Unknown
+    Unknown,
 }
 
 #[derive(serde::Serialize)]
@@ -92,7 +92,11 @@ impl Error {
                 (StatusCode::BAD_REQUEST, message, Some(validation_errors))
             }
 
-            Error::Unknown => (StatusCode::INTERNAL_SERVER_ERROR, "Unknown error occurred.".to_string(), None)
+            Error::Unknown => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Unknown error occurred.".to_string(),
+                None,
+            ),
         }
     }
 }

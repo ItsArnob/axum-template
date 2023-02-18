@@ -1,8 +1,4 @@
-use crate::{
-    routes, 
-    database, 
-    config::Config
-};
+use crate::{config::Config, database, routes};
 use axum::Router;
 use tower_http::{cors::CorsLayer, trace::TraceLayer};
 
@@ -29,7 +25,7 @@ pub async fn build(config: &Config) -> Result<Router<()>, Box<dyn std::error::Er
 
     let app = {
         if config.cors_development {
-              app.layer(CorsLayer::very_permissive())
+            app.layer(CorsLayer::very_permissive())
         } else {
             app
         }
