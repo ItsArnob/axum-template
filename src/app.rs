@@ -1,4 +1,4 @@
-use crate::{config::Config, database, routes};
+use crate::{config::Config, database, routes, utils::error::Error};
 use axum::Router;
 use tower_http::{cors::CorsLayer, trace::TraceLayer};
 
@@ -13,6 +13,7 @@ pub async fn build(config: &Config) -> Result<Router<()>, Box<dyn std::error::Er
 
     let app = Router::new()
         .nest("/auth", routes::auth::build_router())
+        .fallback(|| async { Error::NotFound })
         .with_state(state);
 
     let app = {

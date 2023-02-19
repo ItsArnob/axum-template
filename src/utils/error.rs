@@ -23,6 +23,9 @@ pub enum Error {
 
     #[error("Unknown")]
     Unknown,
+
+    #[error("NotFound")]
+    NotFound,
 }
 
 #[derive(serde::Serialize)]
@@ -92,6 +95,7 @@ impl Error {
                 (StatusCode::BAD_REQUEST, message, Some(validation_errors))
             }
 
+            Error::NotFound => (StatusCode::NOT_FOUND, "The resource you are looking for doesn't exist.".to_string(), None),
             Error::Unknown => (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 "Unknown error occurred.".to_string(),
